@@ -1,0 +1,7 @@
+<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="stroke0_297_3596" fill="white">
+<path d="M9.99999 3C6.134 3 3 6.13401 3 10C3 13.866 6.134 17 9.99999 17C13.866 17 17 13.866 17 10C17 6.13401 13.866 3 9.99999 3Z" fill-rule="evenodd" clip-rule="evenodd"/>
+</mask>
+<path d="M9.99999 3C6.134 3 3 6.13401 3 10C3 13.866 6.134 17 9.99999 17C13.866 17 17 13.866 17 10C17 6.13401 13.866 3 9.99999 3Z" stroke-width="2.4" stroke="#1A1722" mask="url(#stroke0_297_3596)"/>
+<path d="M5.39857 5.55161L15 14" stroke-width="1.2" stroke="#1A1722"/>
+</svg>
