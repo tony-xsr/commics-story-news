@@ -1,0 +1,13 @@
+{
+  "name": "@storyzio/design-tokens",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Colors, typography and spacing from the StoryZio design",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  }
+}

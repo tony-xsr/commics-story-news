@@ -1,0 +1,17 @@
+{
+  "name": "@storyzio/shared",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Pure business logic shared by client and server (pricing, levels, rewards)",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --reporter=dot"
+  },
+  "devDependencies": {
+    "vitest": "5.0.5"
+  }
+}
