@@ -1,0 +1,99 @@
+{
+  "_note": "Chat UI strings removed from src/i18n/strings while chat is parked. Put each back into its file, then run `pnpm i18n`.",
+  "tabs.chat": {
+    "file": "01-core.json",
+    "value": {
+      "en": "Chat",
+      "vi": "Chat",
+      "ja": "チャット",
+      "ko": "채팅",
+      "zh": "聊天",
+      "es": "Chat",
+      "fr": "Chat"
+    }
+  },
+  "chat.empty": {
+    "file": "01-core.json",
+    "value": {
+      "en": "No conversations yet",
+      "vi": "Chưa có cuộc trò chuyện nào",
+      "ja": "まだチャットはありません",
+      "ko": "아직 대화가 없습니다",
+      "zh": "还没有聊天",
+      "es": "Aún no hay conversaciones",
+      "fr": "Aucune discussion pour l'instant"
+    }
+  },
+  "chat.emptyHint": {
+    "file": "01-core.json",
+    "value": {
+      "en": "Open someone's profile and tap the chat button.",
+      "vi": "Mở trang cá nhân của ai đó và bấm nút chat.",
+      "ja": "相手のプロフィールを開いてチャットボタンをタップしてください。",
+      "ko": "상대의 프로필을 열고 채팅 버튼을 누르세요.",
+      "zh": "打开对方的主页并点击聊天按钮。",
+      "es": "Abre el perfil de alguien y toca el botón de chat.",
+      "fr": "Ouvrez le profil d'une personne et touchez le bouton de discussion."
+    }
+  },
+  "chat.newChat": {
+    "file": "01-core.json",
+    "value": {
+      "en": "New chat",
+      "vi": "Cuộc trò chuyện mới",
+      "ja": "新しいチャット",
+      "ko": "새 채팅",
+      "zh": "新聊天",
+      "es": "Nuevo chat",
+      "fr": "Nouvelle discussion"
+    }
+  },
+  "chat.searchPlaceholder": {
+    "file": "01-core.json",
+    "value": {
+      "en": "Search conversations...",
+      "vi": "Tìm cuộc trò chuyện...",
+      "ja": "チャットを検索...",
+      "ko": "대화 검색...",
+      "zh": "搜索聊天...",
+      "es": "Buscar conversaciones...",
+      "fr": "Rechercher des discussions..."
+    }
+  },
+  "chat.deleteTitle": {
+    "file": "05-rewards-shop.json",
+    "value": {
+      "en": "Delete conversation?",
+      "vi": "Xoá cuộc trò chuyện?",
+      "ja": "チャットを削除しますか？",
+      "ko": "대화를 삭제할까요?",
+      "zh": "删除聊天？",
+      "es": "¿Eliminar conversación?",
+      "fr": "Supprimer la discussion ?"
+    }
+  },
+  "chat.deleteMessage": {
+    "file": "05-rewards-shop.json",
+    "value": {
+      "en": "Delete your conversation with {name}?",
+      "vi": "Xoá cuộc trò chuyện với {name}?",
+      "ja": "{name}さんとのチャットを削除しますか？",
+      "ko": "{name}님과의 대화를 삭제할까요?",
+      "zh": "删除与 {name} 的聊天？",
+      "es": "¿Eliminar tu conversación con {name}?",
+      "fr": "Supprimer votre discussion avec {name} ?"
+    }
+  },
+  "users.blockMessage (restore: mentions chats)": {
+    "file": "05-rewards-shop.json",
+    "value": {
+      "en": "They will be added to your block list and their comments and chats will be hidden. You can unblock them anytime in Settings.",
+      "vi": "Người này sẽ vào danh sách chặn; bình luận và tin nhắn của họ sẽ bị ẩn. Bạn có thể bỏ chặn bất cứ lúc nào trong Cài đặt.",
+      "ja": "ブロックリストに追加され、コメントとチャットが非表示になります。設定からいつでも解除できます。",
+      "ko": "차단 목록에 추가되며 댓글과 채팅이 숨겨집니다. 설정에서 언제든 해제할 수 있습니다.",
+      "zh": "对方将加入黑名单，其评论和聊天将被隐藏。可随时在设置中解除。",
+      "es": "Se añadirá a tu lista de bloqueados y se ocultarán sus comentarios y chats. Puedes desbloquearlo cuando quieras en Ajustes.",
+      "fr": "Cette personne sera ajoutée à votre liste de blocage et ses commentaires et discussions seront masqués. Vous pouvez la débloquer à tout moment dans les Paramètres."
+    }
+  }
+}
