@@ -1,0 +1,20 @@
+<svg width="1280" height="580" viewBox="0 0 1280 580" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_879_1253)">
+<path d="M0 48C0 21.4903 21.4903 0 48 0H1232C1258.51 0 1280 21.4903 1280 48V532C1280 558.51 1258.51 580 1232 580H48C21.4904 580 0 558.51 0 532V48Z" fill="white" fill-opacity="0.5"/>
+<ellipse cx="364" cy="362" rx="264" ry="275" fill="url(#paint0_linear_879_1253)"/>
+<mask id="stroke0_879_1253" fill="white">
+<path d="M565 378C565 529.878 446.803 653 301 653C155.197 653 37 529.878 37 378C37 226.122 155.197 103 301 103C446.803 103 565 226.122 565 378Z"/>
+</mask>
+<ellipse cx="301" cy="378" rx="264" ry="275" stroke-width="2" stroke="white" mask="url(#stroke0_879_1253)"/>
+</g>
+<path d="M48 0.5H1232C1258.23 0.500016 1279.5 21.7665 1279.5 48V532C1279.5 558.234 1258.23 579.5 1232 579.5H48C21.7665 579.5 0.5 558.234 0.5 532V48C0.5 21.7665 21.7665 0.500001 48 0.5Z" stroke="white"/>
+<defs>
+<linearGradient id="paint0_linear_879_1253" x1="108.99" y1="87" x2="608.963" y2="556.324" gradientUnits="userSpaceOnUse">
+<stop stop-color="white"/>
+<stop offset="1" stop-color="white" stop-opacity="0"/>
+</linearGradient>
+<clipPath id="clip0_879_1253">
+<path d="M0 48C0 21.4903 21.4903 0 48 0H1232C1258.51 0 1280 21.4903 1280 48V532C1280 558.51 1258.51 580 1232 580H48C21.4904 580 0 558.51 0 532V48Z" fill="white"/>
+</clipPath>
+</defs>
+</svg>
