@@ -1,0 +1,258 @@
+--- a/apps/mobile/src/app/(tabs)/_layout.tsx
++++ b/apps/mobile/src/app/(tabs)/_layout.tsx
+@@ -43,6 +43,7 @@
+         <TabList style={{ display: 'none' }}>
+           <TabTrigger name="home" href="/" />
+           <TabTrigger name="genres" href="/genres" />
++          <TabTrigger name="chat" href="/chat" />
+           <TabTrigger name="library" href="/library" />
+           <TabTrigger name="profile" href="/profile" />
+         </TabList>
+--- a/apps/mobile/src/app/_layout.tsx
++++ b/apps/mobile/src/app/_layout.tsx
+@@ -12,6 +12,7 @@
+ import { ApiRoot } from '../lib/ApiRoot';
+ import { AuthProvider, useAuth } from '../context/AuthContext';
+ import { BadgeProvider } from '../context/BadgeContext';
++import { ChatProvider } from '../context/ChatContext';
+ import { InboxProvider } from '../context/InboxContext';
+ import { LanguageProvider } from '../context/LanguageContext';
+ import { PreferencesProvider } from '../context/PreferencesContext';
+@@ -51,6 +52,7 @@
+         <Stack.Screen name="genre/[id]" />
+         <Stack.Screen name="section/[id]" />
+         <Stack.Screen name="search" />
++        <Stack.Screen name="chat/[id]" />
+         <Stack.Screen name="story/[id]" />
+         <Stack.Screen name="reader/[id]" />
+         <Stack.Screen name="task" />
+@@ -102,6 +104,7 @@
+       <ApiRoot fallback={<LoadingScreen />}>
+       <AppGate>
+       <AuthProvider>
++        <ChatProvider>
+           <ProfileProvider>
+             <LanguageProvider>
+               <PreferencesProvider>
+@@ -124,6 +127,7 @@
+               </PreferencesProvider>
+             </LanguageProvider>
+           </ProfileProvider>
++        </ChatProvider>
+       </AuthProvider>
+       </AppGate>
+       </ApiRoot>
+--- a/apps/mobile/src/app/user/[id].tsx
++++ b/apps/mobile/src/app/user/[id].tsx
+@@ -7,7 +7,7 @@
+ import { useSafeAreaInsets } from 'react-native-safe-area-context';
+ import { ScreenBackground } from '../../components/ScreenBackground';
+ import { Avatar } from '../../components/Avatar';
+-import { BackIcon, MoreIcon, ReportIcon } from '../../components/icons';
++import { BackIcon, ChatIcon, MoreIcon, ReportIcon } from '../../components/icons';
+ import { BlockIcon } from '../../components/icons/setting';
+ import { ConfirmDialog } from '../../components/ConfirmDialog';
+ import { hasLevelIcon, LevelTagIcon } from '../../components/icons/level';
+@@ -18,6 +18,7 @@
+ import { PopupMenu } from '../../components/PopupMenu';
+ import { StatDivider, StatItem, UsernameCopy } from '../../components/ProfileParts';
+ import { StickyScreen } from '../../components/StickyScreen';
++import { useChat } from '../../context/ChatContext';
+ import { useAuth } from '../../context/AuthContext';
+ import { useBadges } from '../../context/BadgeContext';
+ import { useToast } from '../../context/ToastContext';
+@@ -27,6 +28,7 @@
+ 
+ const AVATAR_SIZE = 80;
+ const AVATAR_NAME_GAP = 12;
++const CHAT_BUTTON_SIZE = 30;
+ const ACTIONS_WIDTH = 108;
+ const HEADER_HEIGHT = 40;
+ 
+@@ -53,6 +55,7 @@
+   const insets = useSafeAreaInsets();
+   const { width } = useWindowDimensions();
+   const nameOffset = (width - spacing.l * 1) / 6 - AVATAR_SIZE / 2 - AVATAR_NAME_GAP;
++  const { startConversation } = useChat();
+   const { isSignedIn, user: me } = useAuth();
+   const { all: allBadges } = useBadges();
+   const { showToast } = useToast();
+@@ -78,6 +81,12 @@
+   const setBlock = (block: boolean, then?: () => void) =>
+     toggleBlock.mutate({ userId: profile.id, block }, { onError, onSuccess: then });
+ 
++  const openChat = () =>
++    startConversation(profile.id).then(
++      (conversationId) => router.push(`/chat/${conversationId}`),
++      (err: unknown) => showToast(errorMessage(err)),
++    );
++
+   return (
+     <StickyScreen
+       background={<ScreenBackground />}
+@@ -136,9 +145,25 @@
+               bottom: 0,
+               right: 0,
+               alignItems: 'flex-end',
+-              // Chat button (above) is parked: parked/mobile-chat/README.md.
+-              justifyContent: 'flex-end',
++              justifyContent: 'space-between',
+             }}>
++            <Pressable
++              onPress={openChat}
++              accessibilityRole="button"
++              accessibilityLabel={t('tabs.chat')}
++              style={[
++                {
++                  width: CHAT_BUTTON_SIZE,
++                  height: CHAT_BUTTON_SIZE,
++                  alignItems: 'center',
++                  justifyContent: 'center',
++                  borderRadius: CHAT_BUTTON_SIZE / 2,
++                  backgroundColor: colors.surface,
++                },
++                shadows.modalCard,
++              ]}>
++              <ChatIcon size={20} />
++            </Pressable>
+             {isMe ? null : <FollowButton following={following} onPress={() => setFollow(!following)} />}
+           </View>
+         </View>
+--- a/apps/mobile/src/components/TabBar.tsx
++++ b/apps/mobile/src/components/TabBar.tsx
+@@ -3,7 +3,7 @@
+ import { useTabBarHidden } from '../context/TabBarContext';
+ import { useTabDots } from '../context/TabBadgeContext';
+ import { colors, shadows, spacing } from '../theme';
+-import { GenresIcon, HomeIcon, LibraryIcon, ProfileIcon } from './icons';
++import { ChatIcon, GenresIcon, HomeIcon, LibraryIcon, ProfileIcon } from './icons';
+ import { TabBarItem } from './TabBarItem';
+ import { useT } from '../context/LanguageContext';
+ 
+@@ -12,6 +12,7 @@
+ const TABS = [
+   { name: 'home', label: 'tabs.home', Icon: HomeIcon },
+   { name: 'genres', label: 'tabs.genres', Icon: GenresIcon },
++  { name: 'chat', label: 'tabs.chat', Icon: ChatIcon },
+   { name: 'library', label: 'tabs.library', Icon: LibraryIcon },
+   { name: 'profile', label: 'tabs.profile', Icon: ProfileIcon },
+ ] as const;
+@@ -41,7 +42,7 @@
+       ]}>
+       {TABS.map(({ name, label, Icon }) => (
+         <TabTrigger key={name} name={name} asChild>
+-          <TabBarItem label={t(label)} Icon={Icon} dot={name === 'profile' ? dots.profile : false} />
++          <TabBarItem label={t(label)} Icon={Icon} dot={name === 'chat' ? dots.chat : name === 'profile' ? dots.profile : false} />
+         </TabTrigger>
+       ))}
+     </View>
+--- a/apps/mobile/src/context/TabBadgeContext.tsx
++++ b/apps/mobile/src/context/TabBadgeContext.tsx
+@@ -1,22 +1,29 @@
+ import { usePathname } from 'expo-router';
+ import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
++import { useChat } from './ChatContext';
+ import { useInbox } from './InboxContext';
+ 
+-// Chat (unread dot on its tab) is parked until a later release: parked/mobile-chat/README.md.
+-type TabDots = { profile: boolean };
++type TabDots = { chat: boolean; profile: boolean };
+ 
+-const TabBadgeContext = createContext<TabDots>({ profile: false });
++const TabBadgeContext = createContext<TabDots>({ chat: false, profile: false });
+ 
+ export function TabBadgeProvider({ children }: { children: ReactNode }) {
+   const pathname = usePathname();
++  const { unreadCount: unreadChats } = useChat();
+   const { unreadCount } = useInbox();
+ 
+-  const [seen, setSeen] = useState({ profile: 0 });
++  const [seen, setSeen] = useState({ chat: 0, profile: 0 });
+ 
+-  const next = { profile: pathname === '/profile' ? unreadCount : Math.min(seen.profile, unreadCount) };
+-  if (next.profile !== seen.profile) setSeen(next);
++  const next = {
++    chat: pathname === '/chat' ? unreadChats : Math.min(seen.chat, unreadChats),
++    profile: pathname === '/profile' ? unreadCount : Math.min(seen.profile, unreadCount),
++  };
++  if (next.chat !== seen.chat || next.profile !== seen.profile) setSeen(next);
+ 
+-  const dots = useMemo(() => ({ profile: unreadCount > seen.profile }), [unreadCount, seen]);
++  const dots = useMemo(
++    () => ({ chat: unreadChats > seen.chat, profile: unreadCount > seen.profile }),
++    [unreadChats, unreadCount, seen],
++  );
+ 
+   return <TabBadgeContext.Provider value={dots}>{children}</TabBadgeContext.Provider>;
+ }
+--- a/apps/mobile/src/lib/push.ts
++++ b/apps/mobile/src/lib/push.ts
+@@ -27,7 +27,11 @@
+ /** Broadcasts nest the InboxAction under `action` (a JSON string, FCM data is strings only); event pushes put its
+  *  fields in the data itself. Anything unknown opens the inbox. */
+ function openPush(data: RemoteData, api: Endpoints) {
+-  // Chat pushes ({ type: 'chat', conversationId }) are ignored while chat is parked: parked/mobile-chat/README.md.
++  // Chat message pushes: { type: 'chat', conversationId }
++  if (data?.type === 'chat' && typeof data.conversationId === 'string' && /^[0-9a-f-]{36}$/i.test(data.conversationId)) {
++    router.push(`/chat/${data.conversationId}`);
++    return;
++  }
+   const raw = typeof data?.action === 'string' ? safeJson(data.action) : (data?.action ?? data);
+   const parsed = InboxAction.safeParse(raw);
+   if (parsed.success) void openAction(parsed.data, api);
+--- a/apps/mobile/src/lib/config.ts
++++ b/apps/mobile/src/lib/config.ts
+@@ -16,6 +16,8 @@
+   Platform.OS === 'ios'
+     ? `https://apps.apple.com/redeem?ctx=offercodes${IOS_APP_ID ? `&id=${IOS_APP_ID}` : ''}`
+     : 'https://play.google.com/redeem';
++/** Socket.IO origin (realtime process; path /realtime). Defaults to the API host on port 4001 (local dev). */
++export const REALTIME_URL = process.env.EXPO_PUBLIC_REALTIME_URL ?? API_URL.replace(/:4000$/, ':4001');
+ 
+ /** Rewarded ad unit. Without an id, Google's test unit is used (test ads — never real revenue). */
+ export const ADMOB_REWARDED_UNIT =
+--- a/apps/mobile/package.json
++++ b/apps/mobile/package.json
+@@ -51,7 +51,8 @@
+     "react-native-safe-area-context": "5.7.0",
+     "react-native-screens": "4.26.2",
+     "react-native-svg": "15.15.4",
+-    "react-native-view-shot": "5.1.0"
++    "react-native-view-shot": "5.1.0",
++    "socket.io-client": "4.8.1"
+   },
+   "devDependencies": {
+     "@types/react": "19.2.18",
+--- a/apps/mobile/e2e/maestro/tabs.yaml
++++ b/apps/mobile/e2e/maestro/tabs.yaml
+@@ -14,6 +14,9 @@
+ - tapOn: "Genres"
+ - waitForAnimationToEnd
+ - takeScreenshot: shots/02-genres
++- tapOn: "Chat"
++- waitForAnimationToEnd
++- takeScreenshot: shots/03-chat
+ - tapOn: "Library"
+ - waitForAnimationToEnd
+ - takeScreenshot: shots/04-library
+--- a/apps/mobile/e2e/maestro/tour.yaml
++++ b/apps/mobile/e2e/maestro/tour.yaml
+@@ -11,6 +11,8 @@
+ - waitForAnimationToEnd
+ - takeScreenshot: shots/${LANG}-04-genre
+ - runFlow: lang-start.yaml
++- tapOn: "${TAB_CHAT}"
++- takeScreenshot: shots/${LANG}-05-chat
+ - tapOn: "${TAB_LIBRARY}"
+ - takeScreenshot: shots/${LANG}-06-library
+ - tapOn: "${TAB_PROFILE}"
+--- a/apps/mobile/e2e/maestro/run-tour.mjs
++++ b/apps/mobile/e2e/maestro/run-tour.mjs
+@@ -22,6 +22,7 @@
+     GOT_IT: t('common.gotIt'),
+     TAB_HOME: t('tabs.home'),
+     TAB_GENRES: t('tabs.genres'),
++    TAB_CHAT: t('tabs.chat'),
+     TAB_LIBRARY: t('tabs.library'),
+     TAB_PROFILE: t('tabs.profile'),
+     SEARCH_PH: t('home.searchPlaceholder'),
